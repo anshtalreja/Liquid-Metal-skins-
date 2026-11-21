@@ -52,7 +52,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* the material itself */
-.skin{position:relative;background-color:var(--metal);background-image:var(--tile);background-blend-mode:var(--blend);background-size:var(--tw,260px) auto;overflow:hidden}
+.skin{position:relative;isolation:isolate;background-color:var(--metal);background-image:var(--tile);background-blend-mode:var(--blend);background-size:var(--tw,260px) auto;overflow:hidden}
 .skin::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(100deg,rgba(255,255,255,0) 18%,rgba(255,255,255,.20) 42%,rgba(255,255,255,0) 62%),linear-gradient(180deg,rgba(255,255,255,.10),rgba(0,0,0,.22));
   mix-blend-mode:soft-light}
