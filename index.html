@@ -70,7 +70,7 @@ nav a:hover{color:var(--ink)}
 .hero h1{font-size:clamp(44px,8vw,104px);line-height:.98;margin:18px 0 22px}
 .hero h1 em{font-style:normal;color:var(--accent);transition:color .5s}
 .sheetfig{margin:44px 0 0}
-.sheet{aspect-ratio:10/1.75;width:100%;border-radius:2px;box-shadow:0 24px 60px rgba(0,0,0,.55);--tw:17.5%}
+.sheet{aspect-ratio:var(--ar,120/21);width:100%;border-radius:2px;box-shadow:0 24px 60px rgba(0,0,0,.55);--tw:17.5%}
 .dims{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .dims i{flex:1;height:1px;background:var(--line)}
 .powered{display:flex;flex-wrap:wrap;align-items:center;gap:18px 30px;margin-top:36px}
@@ -92,7 +92,18 @@ section{padding:72px 0;border-top:1px solid var(--line)}
 .card .ph{aspect-ratio:3/4;background-size:cover;background-position:center;border-radius:2px;outline:1px solid transparent;outline-offset:4px;transition:outline-color .2s,transform .3s}
 .card:hover .ph{transform:translateY(-3px)}
 .card[aria-pressed="true"] .ph{outline-color:var(--accent)}
-.card .no{font-size:11px;letter-spacing:.18em;color:var(--muted)}
+.card[hidden]{display:none}
+.card .no{font-size:11px;letter-spacing:.18em;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.sz{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:1px 7px;color:var(--ink);white-space:nowrap}
+.sz.M{border-color:var(--accent);color:var(--accent)}
+.sz.J{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.finder{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin:-6px 0 26px}
+.finder input{flex:0 1 300px;min-width:0;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15px;padding:11px 14px;border-radius:2px}
+.finder input::placeholder{color:var(--muted)}
+.szf{display:flex;flex-wrap:wrap;gap:8px}
+.empty{grid-column:1/-1;color:var(--muted);padding:24px 0}
+.szline{margin-top:10px;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .card .nm{font-family:var(--display);font-size:19px;line-height:1.1}
 .card .tn{font-size:12px;color:var(--muted)}
 
@@ -157,13 +168,14 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
   <h1>Real metal<br>that <em>drapes.</em></h1>
   <p class="lede">Liquid metal, hand-applied in a flexible resin onto an embossed base. The result is a metal skin that rolls, bends and wraps, so walls, shutters, columns and furniture can all be clad in the same surface.</p>
   <figure class="sheetfig">
-    <div class="sheet skin" id="heroSheet" role="img" aria-label="One full skin shown to proportion, 10 feet by 1.75 feet"></div>
-    <div class="dims"><span>One skin, to proportion</span><i></i><span>10 ft long × 1.75 ft wide</span></div>
+    <div class="sheet skin" id="heroSheet" role="img" aria-label="One full skin shown to proportion"></div>
+    <div class="dims"><span>One skin, to proportion</span><i></i><span id="heroDims">10 ft long × 21 in wide · Regular roll</span></div>
   </figure>
   <div class="facts">
     <div><b>₹1,600</b><span>per sq ft, plus 18% GST</span></div>
-    <div><b>17.5 sq ft</b><span>per roll (10 ft × 1.75 ft)</span></div>
-    <div><b>₹28,000</b><span>per roll, before GST</span></div>
+    <div><b>₹28,000</b><span>Regular roll · 21 in × 10 ft · 17.5 sq ft</span></div>
+    <div><b>₹37,333</b><span>Medium roll · 28 in × 10 ft · 23.33 sq ft</span></div>
+    <div><b>₹56,000</b><span>Jumbo roll · 42 in × 10 ft · 35 sq ft</span></div>
     <div><b id="factCount">22</b><span>textures · 29 metal colours</span></div>
   </div>
   <div class="powered" id="powered"><span class="eyebrow">Powered by</span><img class="lg veda" src="img/logo-veda.png" alt="Veda Surfaces Private Limited"><i></i><img class="lg ct" src="img/logo-colortek.png" alt="ColorTek"></div>
@@ -172,6 +184,12 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
 <section id="collection"><div class="wrap">
   <div class="head"><div class="eyebrow">The collection</div><h2>Twenty-two textures, each finished by hand</h2>
   <p class="lede">Every image below is a scan of a finished skin. Two textures were sampled in two metals. Pick one to see it in other metals and in a room.</p></div>
+  <div class="finder" role="search">
+    <label class="vh" for="q">Search by code or name</label>
+    <input id="q" type="search" placeholder="Search by code, e.g. 2007" autocomplete="off" enterkeyhint="go">
+    <div class="szf" id="szf"></div>
+    <span class="fine" id="qCount" aria-live="polite"></span>
+  </div>
   <div class="grid" id="grid"></div>
 </div></section>
 
@@ -181,11 +199,12 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
   <div class="studio">
     <div><div class="swatch skin full" id="swatch"></div><span class="tag" id="mode">As sampled · real scan</span></div>
     <div class="cfg">
-      <div><div class="eyebrow" id="selNo">Skin 13</div><h3 id="selName">Diamond</h3><p class="lede" id="selNote"></p></div>
+      <div><div class="eyebrow" id="selNo">Skin 13</div><h3 id="selName">Diamond</h3><p class="szline" id="selSize"></p><p class="lede" id="selNote"></p></div>
       <div id="colors" style="display:flex;flex-direction:column;gap:16px"></div>
       <div class="price">
         <div class="row"><label for="area">Area to cover (sq ft)</label><input id="area" type="number" min="1" step="1" value="70" inputmode="decimal"></div>
-        <div class="row"><span>Rolls needed (17.5 sq ft each)</span><b id="pSheets">4</b></div>
+        <div class="row"><span>Roll size</span><b id="pSize">Regular · 21 in × 10 ft</b></div>
+        <div class="row"><span>Rolls needed (<span id="pEach">17.5</span> sq ft each)</span><b id="pSheets">4</b></div>
         <div class="row"><span>Material supplied</span><b id="pSq">70 sq ft</b></div>
         <div class="row"><span>Material at ₹1,600 per sq ft</span><b id="pSub">₹1,12,000</b></div>
         <div class="row"><span>GST at 18%</span><b id="pGst">₹20,160</b></div>
@@ -199,7 +218,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
 
 <section id="applications"><div class="wrap">
   <div class="head"><div class="eyebrow">Applications</div><h2>Where a metal skin goes</h2>
-  <p class="lede">The scenes use the texture and metal you have selected. Vertical joints are drawn every 1.75 ft, the width of one skin.</p></div>
+  <p class="lede">The scenes use the texture and metal you have selected. Vertical joints mark the width of one roll in the selected texture's size.</p></div>
   <div class="tabs" id="tabs" role="tablist"></div>
   <div class="stage" id="stage">
 
@@ -319,7 +338,14 @@ const FAMS=[
  ["Copper",[["Antique Copper",[104,81,77]],["Copper",[135,97,86]],["Copper Bronze",[134,96,84]],["Copper Gold (Rose Gold)",[136,108,92]],["Dark Copper",[109,81,70]],["Super Antique Copper",[104,92,88]]]],
  ["Bronze",[["Antique Bronze",[107,96,88]],["Bronze",[149,123,100]],["Bronze Gold",[144,120,92]],["Champagne Bronze",[137,127,120]],["Dark Bronze",[96,84,74]],["Shiny Bronze",[141,129,119]],["Super Antique Bronze",[104,97,92]],["Titanium Bronze",[140,129,119]],["White Bronze",[125,116,107]]]]
 ];
-const SHEET=17.5, RATE=1600, GST=0.18;
+const RATE=1600, GST=0.18;
+// every roll is cut to 10 ft; width depends on the base design (from the stock register)
+const SIZES={R:{name:"Regular",w:21},M:{name:"Medium",w:28},J:{name:"Jumbo",w:42}};
+for(const k in SIZES)SIZES[k].sq=SIZES[k].w*120/144;
+const SIZE_OF={"1013":"M","2002":"M","2003":"M","2004":"M","2005":"M","2006":"M","2007":"M","1015":"J","1016":"J","1017":"J","1214":"J","2001":"J"};
+const sizeKey=i=>SIZE_OF[SKINS[i][4]]||"R", sizeOf=i=>SIZES[sizeKey(i)];
+const sqf=v=>String(+v.toFixed(2));
+let filt={q:"",size:""};
 const WA_NUMBER="";   // studio WhatsApp number with country code, digits only, e.g. 919800000000
 const $=s=>document.querySelector(s), pad=n=>String(n).padStart(2,"0");
 const rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
@@ -334,8 +360,15 @@ SKINS.splice(15,1);SKINS.splice(11,1);
 const vars=i=>{const s=SKINS[i];return [{img:s[5],tone:s[1],rgb:s[3]}].concat(s[6]?[s[6]]:[])};
 
 function build(){
-  $("#grid").innerHTML=SKINS.map((s,i)=>`<button class="card" data-i="${i}" aria-pressed="false"><div class="ph" style="background-image:url(img/t${s[5]}s.jpg)"></div><div><div class="no">${label(i).toUpperCase()}</div><div class="nm">${s[0]}</div><div class="tn">Sampled in ${vars(i).map(v=>v.tone.toLowerCase()).join(" and ")}</div></div></button>`).join("");
+  $("#grid").innerHTML=SKINS.map((s,i)=>`<button class="card" data-i="${i}" aria-pressed="false"><div class="ph" style="background-image:url(img/t${s[5]}s.jpg)"></div><div><div class="no">${label(i).toUpperCase()}<span class="sz ${sizeKey(i)}">${sizeOf(i).name} ${sizeOf(i).w}″</span></div><div class="nm">${s[0]}</div><div class="tn">Sampled in ${vars(i).map(v=>v.tone.toLowerCase()).join(" and ")}</div></div></button>`).join("");
+  $("#grid").insertAdjacentHTML("beforeend",`<p class="empty" id="noHit" hidden></p>`);
   $("#grid").onclick=e=>{const b=e.target.closest(".card");if(b){st.skin=+b.dataset.i;st.variant=0;render();location.hash="studio"}};
+  const counts={};SKINS.forEach((s,i)=>counts[sizeKey(i)]=(counts[sizeKey(i)]||0)+1);
+  $("#szf").innerHTML=`<button class="chip" data-s="" aria-pressed="true">All sizes</button>`+Object.keys(SIZES).filter(k=>counts[k]).map(k=>`<button class="chip" data-s="${k}" aria-pressed="false">${SIZES[k].name} ${SIZES[k].w}″ · ${counts[k]}</button>`).join("");
+  $("#szf").onclick=e=>{const b=e.target.closest(".chip");if(b){filt.size=b.dataset.s;filter()}};
+  $("#q").oninput=e=>{filt.q=e.target.value;filter()};
+  $("#q").onkeydown=e=>{if(e.key==="Enter"){const b=document.querySelector(".card:not([hidden])");if(b){e.preventDefault();b.click()}}};
+  filter();
   let h=`<div class="fam"><div class="chips" id="asChips"></div></div>`;
   FAMS.forEach(f=>{h+=`<div class="fam"><div class="lab">${f[0]}</div><div class="chips">`+f[1].map(c=>`<button class="chip" data-c="${c[0]}" aria-pressed="false"><i style="background:${rgb(lift(c[1],1))}"></i>${c[0]}</button>`).join("")+`</div></div>`});
   $("#colors").innerHTML=h;
@@ -347,16 +380,31 @@ function build(){
   $("#area").oninput=e=>{st.area=Math.max(0,+e.target.value||0);price();summary()};
   $("#copy").onclick=async()=>{try{await navigator.clipboard.writeText($("#summary").textContent);$("#copied").textContent="Copied"}catch(e){$("#copied").textContent="Select the text and copy it manually"}};
 }
+function filter(){
+  const raw=filt.q.trim().toLowerCase(), digits=raw.replace(/^b\s*/,"").replace(/\D/g,"");
+  let shown=0;
+  document.querySelectorAll(".card").forEach(b=>{
+    const i=+b.dataset.i, s=SKINS[i];
+    const hitQ=!raw||(digits&&String(s[4]).includes(digits))||s[0].toLowerCase().includes(raw);
+    const hitS=!filt.size||sizeKey(i)===filt.size;
+    b.hidden=!(hitQ&&hitS); if(!b.hidden)shown++;
+  });
+  document.querySelectorAll("#szf .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===filt.size));
+  const nh=$("#noHit"); nh.hidden=shown>0;
+  nh.textContent=`No skin matches "${filt.q.trim()}"${filt.size?" in "+SIZES[filt.size].name+" size":""}. Codes on this page run from 1001 to 2039.`;
+  $("#qCount").textContent=(raw||filt.size)?`${shown} of ${SKINS.length} shown${shown?" · press Enter to open the first":""}`:"";
+}
 function findColor(n){for(const f of FAMS)for(const c of f[1])if(c[0]===n)return c;return null}
 function price(){
-  const n=Math.ceil(st.area/SHEET)||0, sq=n*SHEET;
-  const sub=sq*RATE, gst=sub*GST;
-  $("#pSheets").textContent=n; $("#pSq").textContent=sq+" sq ft"; $("#pSub").textContent=inr(sub); $("#pGst").textContent=inr(gst); $("#pTot").textContent=inr(sub+gst);
-  return {n,sq,sub,gst,tot:sub+gst};
+  const z=sizeOf(st.skin), n=Math.ceil(st.area/z.sq-1e-9)||0, sq=n*z.sq;
+  const sub=Math.round(sq*RATE), gst=Math.round(sub*GST);
+  $("#pSize").textContent=`${z.name} · ${z.w} in × 10 ft`; $("#pEach").textContent=sqf(z.sq);
+  $("#pSheets").textContent=n; $("#pSq").textContent=sqf(sq)+" sq ft"; $("#pSub").textContent=inr(sub); $("#pGst").textContent=inr(gst); $("#pTot").textContent=inr(sub+gst);
+  return {n,sq,sub,gst,tot:sub+gst,z};
 }
 function summary(){
   const s=SKINS[st.skin], p=price();
-  const msg=`Hello, I would like a quotation for VĀLT Liquid Metal Skins.\n\nCode: ${s[4]} (${s[0]})\nMetal: ${st.color||"As sampled ("+vars(st.skin)[st.variant||0].tone+" tone)"}\nApplication: ${document.querySelectorAll(".sc")[st.scene].dataset.n}\nArea to cover: ${st.area} sq ft\nRolls needed: ${p.n} (10 ft × 1.75 ft each, ${p.sq} sq ft)\n\nMaterial at ₹1,600 per sq ft: ${inr(p.sub)}\nGST at 18%: ${inr(p.gst)}\nEstimated total: ${inr(p.tot)}`;
+  const msg=`Hello, I would like a quotation for VĀLT Liquid Metal Skins.\n\nCode: ${s[4]} (${s[0]})\nMetal: ${st.color||"As sampled ("+vars(st.skin)[st.variant||0].tone+" tone)"}\nApplication: ${document.querySelectorAll(".sc")[st.scene].dataset.n}\nArea to cover: ${st.area} sq ft\nRoll size: ${p.z.name}, ${p.z.w} in × 10 ft (${sqf(p.z.sq)} sq ft per roll)\nRolls needed: ${p.n} (${sqf(p.sq)} sq ft)\n\nMaterial at ₹1,600 per sq ft: ${inr(p.sub)}\nGST at 18%: ${inr(p.gst)}\nEstimated total: ${inr(p.tot)}`;
   $("#summary").textContent=msg;
   const url="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg);
   $("#wa1").href=url; $("#wa2").href=url;
@@ -374,6 +422,12 @@ function render(){
   document.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",c?b.dataset.c===st.color:(b.dataset.c===""&&V[+b.dataset.v]===v)));
   document.querySelectorAll(".tab").forEach((b,i)=>b.setAttribute("aria-selected",i===st.scene));
   document.querySelectorAll(".sc").forEach((e,i)=>e.classList.toggle("on",i===st.scene));
+  const z=sizeOf(st.skin);
+  $("#selSize").textContent=`${z.name} roll · ${z.w} in × 10 ft · ${sqf(z.sq)} sq ft · ${inr(z.sq*RATE)} per roll before GST`;
+  r.setProperty("--ar",`120/${z.w}`);
+  $("#heroDims").textContent=`10 ft long × ${z.w} in wide · ${z.name} roll`;
+  $("#heroSheet").setAttribute("aria-label",`One ${z.name.toLowerCase()} skin shown to proportion, 10 feet by ${z.w} inches`);
+  document.querySelectorAll(".joints").forEach(j=>j.style.setProperty("--pw",(10*z.w/21).toFixed(2)+"cqw"));
   $("#selNo").textContent=label(st.skin); $("#selName").textContent=s[0]; $("#selNote").textContent=s[2];
   $("#mode").textContent=c?`${c[0]} · simulated`:`As sampled${V.length>1?" in "+v.tone.toLowerCase():""} · real scan`;
   $("#cap").textContent=`${s[0]} · ${c?c[0]+" (simulated)":"as sampled"}`;
