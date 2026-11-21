@@ -59,12 +59,31 @@ button{font:inherit;color:inherit;cursor:pointer}
 .skin.full{background-image:var(--full);background-size:cover;background-position:center}
 
 header{position:sticky;top:0;z-index:20;background:rgba(21,18,15,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.bar{display:flex;align-items:center;gap:22px;height:60px}
 .brand{font-family:var(--display);font-size:20px;letter-spacing:.14em;text-decoration:none}
 .brand small{font-family:var(--body);font-size:10px;letter-spacing:.22em;color:var(--muted);margin-left:10px;text-transform:uppercase}
 nav{display:flex;gap:22px;flex-wrap:wrap}
 nav a{font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--muted)}
 nav a:hover{color:var(--ink)}
+.hs{position:relative;flex:0 1 300px;min-width:0;margin-left:auto}
+.hs input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:14px;padding:8px 12px 8px 34px;border-radius:99px}
+.hs input::placeholder{color:var(--muted)}
+.hs svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;pointer-events:none}
+.hres{position:absolute;right:0;left:0;top:calc(100% + 8px);min-width:280px;background:var(--panel);border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.6);max-height:70vh;overflow:auto;z-index:30}
+.hres[hidden]{display:none}
+.hres button{display:flex;gap:12px;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 12px;text-align:left}
+.hres button:hover,.hres button.on{background:#2a241e}
+.hres .th{width:38px;height:52px;flex:none;background-size:cover;background-position:center;border-radius:2px}
+.hres b{display:block;font-weight:500;font-size:14px;letter-spacing:.06em}
+.hres span{font-size:12px;color:var(--muted)}
+.hres p{padding:14px;font-size:13px;color:var(--muted);margin:0}
+.cat{display:flex;flex-direction:column;gap:18px}
+.cat[hidden]{display:none}
+.cats{display:flex;flex-direction:column;gap:46px}
+.cathead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.cathead h3{font-size:30px}
+.cathead .spec{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cathead .cnt{margin-left:auto;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
 
 .hero{padding:64px 0 40px}
 .hero h1{font-size:clamp(44px,8vw,104px);line-height:.98;margin:18px 0 22px}
@@ -93,7 +112,7 @@ section{padding:72px 0;border-top:1px solid var(--line)}
 .card:hover .ph{transform:translateY(-3px)}
 .card[aria-pressed="true"] .ph{outline-color:var(--accent)}
 .card[hidden]{display:none}
-.card .no{font-size:11px;letter-spacing:.18em;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.card .no{font-size:11px;letter-spacing:.18em;color:var(--muted);display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .sz{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:1px 7px;color:var(--ink);white-space:nowrap}
 .sz.M{border-color:var(--accent);color:var(--accent)}
 .sz.J{background:var(--ink);color:var(--ground);border-color:var(--ink)}
@@ -152,13 +171,19 @@ section{padding:72px 0;border-top:1px solid var(--line)}
 .btn.wa{background:#25d366;color:#0b1f12;text-decoration:none;display:inline-block;text-align:center}
 .btn{background:var(--accent);color:#15120f;border:0;padding:13px 24px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;border-radius:2px;transition:background .5s}
 footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);font-size:12px}
-@media (max-width:820px){.studio,.enq{grid-template-columns:1fr}nav{display:none}.sheet{aspect-ratio:10/3}}
+@media (max-width:820px){.studio,.enq{grid-template-columns:1fr}nav{display:none}.sheet{aspect-ratio:10/3}.brand small{display:none}.hs{flex:1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
   <a class="brand" href="#top">VĀLT<small>Liquid Metal Skins</small></a>
+  <div class="hs" role="search">
+    <label class="vh" for="hq">Search skins by code or name</label>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="hq" type="search" placeholder="Search code, e.g. 2007" autocomplete="off" enterkeyhint="go" aria-controls="hres" aria-expanded="false">
+    <div class="hres" id="hres" hidden></div>
+  </div>
   <nav><a href="#collection">Collection</a><a href="#studio">Colour studio</a><a href="#applications">Applications</a><a href="#enquire">Enquire</a></nav>
 </div></header>
 
@@ -190,7 +215,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
     <div class="szf" id="szf"></div>
     <span class="fine" id="qCount" aria-live="polite"></span>
   </div>
-  <div class="grid" id="grid"></div>
+  <div class="cats" id="grid"></div>
 </div></section>
 
 <section id="studio"><div class="wrap">
@@ -360,15 +385,34 @@ SKINS.splice(15,1);SKINS.splice(11,1);
 const vars=i=>{const s=SKINS[i];return [{img:s[5],tone:s[1],rgb:s[3]}].concat(s[6]?[s[6]]:[])};
 
 function build(){
-  $("#grid").innerHTML=SKINS.map((s,i)=>`<button class="card" data-i="${i}" aria-pressed="false"><div class="ph" style="background-image:url(img/t${s[5]}s.jpg)"></div><div><div class="no">${label(i).toUpperCase()}<span class="sz ${sizeKey(i)}">${sizeOf(i).name} ${sizeOf(i).w}″</span></div><div class="nm">${s[0]}</div><div class="tn">Sampled in ${vars(i).map(v=>v.tone.toLowerCase()).join(" and ")}</div></div></button>`).join("");
-  $("#grid").insertAdjacentHTML("beforeend",`<p class="empty" id="noHit" hidden></p>`);
-  $("#grid").onclick=e=>{const b=e.target.closest(".card");if(b){st.skin=+b.dataset.i;st.variant=0;render();location.hash="studio"}};
+  const card=(s,i)=>`<button class="card" data-i="${i}" aria-pressed="false"><div class="ph" style="background-image:url(img/t${s[5]}s.jpg)"></div><div><div class="no">${label(i).toUpperCase()}<span class="sz ${sizeKey(i)}">${sizeOf(i).name} ${sizeOf(i).w}″</span></div><div class="nm">${s[0]}</div><div class="tn">Sampled in ${vars(i).map(v=>v.tone.toLowerCase()).join(" and ")}</div></div></button>`;
   const counts={};SKINS.forEach((s,i)=>counts[sizeKey(i)]=(counts[sizeKey(i)]||0)+1);
+  $("#grid").innerHTML=Object.keys(SIZES).filter(k=>counts[k]).map(k=>{const z=SIZES[k];
+    return `<div class="cat" data-s="${k}" id="size-${z.name.toLowerCase()}"><div class="cathead"><h3>${z.name} rolls</h3><span class="spec">${z.w} in × 10 ft · ${sqf(z.sq)} sq ft per roll · ${inr(z.sq*RATE)} before GST</span><span class="cnt" data-cnt="${k}">${counts[k]} textures</span></div><div class="grid">`
+      +SKINS.map((s,i)=>sizeKey(i)===k?card(s,i):"").join("")+`</div></div>`}).join("")
+    +`<p class="empty" id="noHit" hidden></p>`;
+  $("#grid").onclick=e=>{const b=e.target.closest(".card");if(b){st.skin=+b.dataset.i;st.variant=0;render();location.hash="studio"}};
   $("#szf").innerHTML=`<button class="chip" data-s="" aria-pressed="true">All sizes</button>`+Object.keys(SIZES).filter(k=>counts[k]).map(k=>`<button class="chip" data-s="${k}" aria-pressed="false">${SIZES[k].name} ${SIZES[k].w}″ · ${counts[k]}</button>`).join("");
   $("#szf").onclick=e=>{const b=e.target.closest(".chip");if(b){filt.size=b.dataset.s;filter()}};
   $("#q").oninput=e=>{filt.q=e.target.value;filter()};
   $("#q").onkeydown=e=>{if(e.key==="Enter"){const b=document.querySelector(".card:not([hidden])");if(b){e.preventDefault();b.click()}}};
   filter();
+  const hq=$("#hq"), hr=$("#hres");let hi=0;
+  const hlist=()=>[...hr.querySelectorAll("button")];
+  const hshow=()=>{const raw=hq.value.trim();
+    if(!raw){hr.hidden=true;hq.setAttribute("aria-expanded","false");return}
+    const m=SKINS.map((s,i)=>i).filter(i=>matches(i,raw.toLowerCase())).slice(0,8);hi=0;
+    hr.innerHTML=m.length?m.map((i,k)=>{const s=SKINS[i],z=sizeOf(i);return `<button type="button" data-i="${i}" class="${k?"":"on"}"><span class="th" style="background-image:url(img/t${s[5]}s.jpg)"></span><span><b>${label(i)}</b><span>${s[0]} · ${z.name} ${z.w}″ · ${inr(z.sq*RATE)} per roll</span></span></button>`}).join("")
+      :`<p>No skin matches "${raw.replace(/[<&]/g,"")}". Codes run from 1001 to 2039.</p>`;
+    hr.hidden=false;hq.setAttribute("aria-expanded","true")};
+  const hopen=b=>{st.skin=+b.dataset.i;st.variant=0;render();hr.hidden=true;hq.value="";hq.blur();location.hash="";location.hash="studio"};
+  hq.oninput=hshow;hq.onfocus=hshow;
+  hq.onkeydown=e=>{const L=hlist();
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){if(!L.length)return;e.preventDefault();L[hi]?.classList.remove("on");hi=(hi+(e.key==="ArrowDown"?1:L.length-1))%L.length;L[hi].classList.add("on");L[hi].scrollIntoView({block:"nearest"})}
+    else if(e.key==="Enter"){if(L[hi]){e.preventDefault();hopen(L[hi])}}
+    else if(e.key==="Escape"){hr.hidden=true}};
+  hr.onclick=e=>{const b=e.target.closest("button");if(b)hopen(b)};
+  document.addEventListener("click",e=>{if(!e.target.closest(".hs"))hr.hidden=true});
   let h=`<div class="fam"><div class="chips" id="asChips"></div></div>`;
   FAMS.forEach(f=>{h+=`<div class="fam"><div class="lab">${f[0]}</div><div class="chips">`+f[1].map(c=>`<button class="chip" data-c="${c[0]}" aria-pressed="false"><i style="background:${rgb(lift(c[1],1))}"></i>${c[0]}</button>`).join("")+`</div></div>`});
   $("#colors").innerHTML=h;
@@ -380,15 +424,22 @@ function build(){
   $("#area").oninput=e=>{st.area=Math.max(0,+e.target.value||0);price();summary()};
   $("#copy").onclick=async()=>{try{await navigator.clipboard.writeText($("#summary").textContent);$("#copied").textContent="Copied"}catch(e){$("#copied").textContent="Select the text and copy it manually"}};
 }
+function matches(i,raw){
+  if(!raw)return true;
+  const s=SKINS[i], digits=raw.replace(/^b\s*/,"").replace(/\D/g,"");
+  return (digits&&String(s[4]).includes(digits))||s[0].toLowerCase().includes(raw)||sizeOf(i).name.toLowerCase()===raw;
+}
 function filter(){
-  const raw=filt.q.trim().toLowerCase(), digits=raw.replace(/^b\s*/,"").replace(/\D/g,"");
+  const raw=filt.q.trim().toLowerCase();
   let shown=0;
   document.querySelectorAll(".card").forEach(b=>{
-    const i=+b.dataset.i, s=SKINS[i];
-    const hitQ=!raw||(digits&&String(s[4]).includes(digits))||s[0].toLowerCase().includes(raw);
+    const i=+b.dataset.i;
+    const hitQ=matches(i,raw);
     const hitS=!filt.size||sizeKey(i)===filt.size;
     b.hidden=!(hitQ&&hitS); if(!b.hidden)shown++;
   });
+  document.querySelectorAll(".cat").forEach(c=>{const v=c.querySelectorAll(".card:not([hidden])").length, all=c.querySelectorAll(".card").length;
+    c.hidden=!v; c.querySelector(".cnt").textContent=v===all?`${all} textures`:`${v} of ${all} textures`});
   document.querySelectorAll("#szf .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===filt.size));
   const nh=$("#noHit"); nh.hidden=shown>0;
   nh.textContent=`No skin matches "${filt.q.trim()}"${filt.size?" in "+SIZES[filt.size].name+" size":""}. Codes on this page run from 1001 to 2039.`;
