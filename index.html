@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VĀLT Liquid Metal Skins</title>
-<meta name="description" content="Real metal that drapes. Flexible liquid metal skins for walls, shutters, columns and furniture, in 22 textures and 29 metal colours.">
+<meta name="description" content="Real metal that drapes. Flexible liquid metal skins for walls, shutters, columns and furniture, in 23 textures and 29 metal colours.">
 <link rel="canonical" href="https://liquidmetalskins.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VĀLT Liquid Metal Skins">
@@ -203,13 +203,13 @@ footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);f
     <div><b>₹28,000</b><span>Regular roll · 21 in × 10 ft · 17.5 sq ft</span></div>
     <div><b>₹37,333</b><span>Medium roll · 28 in × 10 ft · 23.33 sq ft</span></div>
     <div><b>₹56,000</b><span>Jumbo roll · 42 in × 10 ft · 35 sq ft</span></div>
-    <div><b id="factCount">22</b><span>textures · 29 metal colours</span></div>
+    <div><b id="factCount">23</b><span>textures · 29 metal colours</span></div>
   </div>
   <div class="powered" id="powered"><span class="eyebrow">Powered by</span><img class="lg veda" src="img/logo-veda.png" alt="Veda Surfaces Private Limited"><i></i><img class="lg ct" src="img/logo-colortek.png" alt="ColorTek"></div>
 </div>
 
 <section id="collection"><div class="wrap">
-  <div class="head"><div class="eyebrow">The collection</div><h2>Twenty-two textures, each finished by hand</h2>
+  <div class="head"><div class="eyebrow">The collection</div><h2>Twenty-three textures, each finished by hand</h2>
   <p class="lede">Every image below is a scan of a finished skin. Two textures were sampled in two metals. Pick one to see it in other metals and in a room.</p></div>
   <div class="finder" role="search">
     <label class="vh" for="q">Search by code or name</label>
@@ -356,7 +356,8 @@ const SKINS=[
  ["Lizard","Pewter","Rows of small rounded scales that swell and narrow like reptile hide.",[104,103,100],"1206"],
  ["Saddle","Pewter","Natural full-grain leather creasing, cast in metal.",[112,109,104],"1101"],
  ["Mosaic","Pewter","A patchwork of woven, stippled and ribbed grains meeting in large geometric fields.",[100,99,97],"2007"],
- ["Twill","Pewter","Small interlocking hooks running on the diagonal, like a heavy twill weave.",[112,110,107],"1203"]
+ ["Twill","Pewter","Small interlocking hooks running on the diagonal, like a heavy twill weave.",[112,110,107],"1203"],
+ ["Canvas","Copper","A coarse basket weave with a raised dot at every crossing, like heavy canvas cast in metal.",[83,54,46],"1017"]
 ];
 const label=i=>SKINS[i][4]?"Code "+SKINS[i][4]:"Skin "+pad(i+1);
 const FAMS=[
@@ -390,7 +391,7 @@ function build(){
   const card=(s,i)=>`<button class="card" data-i="${i}" aria-pressed="false"><div class="ph" style="background-image:url(img/t${s[5]}s.jpg)"></div><div><div class="no">${label(i).toUpperCase()}<span class="sz ${sizeKey(i)}">${sizeOf(i).name} ${sizeOf(i).w}″</span></div><div class="nm">${s[0]}</div><div class="tn">Sampled in ${vars(i).map(v=>v.tone.toLowerCase()).join(" and ")}</div></div></button>`;
   const counts={};SKINS.forEach((s,i)=>counts[sizeKey(i)]=(counts[sizeKey(i)]||0)+1);
   $("#grid").innerHTML=Object.keys(SIZES).filter(k=>counts[k]).map(k=>{const z=SIZES[k];
-    return `<div class="cat" data-s="${k}" id="size-${z.name.toLowerCase()}"><div class="cathead"><h3>${z.name} rolls</h3><span class="spec">${z.w} in × 10 ft · ${sqf(z.sq)} sq ft per roll · ${inr(z.sq*RATE)} before GST</span><span class="cnt" data-cnt="${k}">${counts[k]} textures</span></div><div class="grid">`
+    return `<div class="cat" data-s="${k}" id="size-${z.name.toLowerCase()}"><div class="cathead"><h3>${z.name} rolls</h3><span class="spec">${z.w} in × 10 ft · ${sqf(z.sq)} sq ft per roll · ${inr(z.sq*RATE)} before GST</span><span class="cnt" data-cnt="${k}">${counts[k]} ${counts[k]===1?"texture":"textures"}</span></div><div class="grid">`
       +SKINS.map((s,i)=>sizeKey(i)===k?card(s,i):"").join("")+`</div></div>`}).join("")
     +`<p class="empty" id="noHit" hidden></p>`;
   $("#grid").onclick=e=>{const b=e.target.closest(".card");if(b){st.skin=+b.dataset.i;st.variant=0;render();location.hash="studio"}};
@@ -441,7 +442,7 @@ function filter(){
     b.hidden=!(hitQ&&hitS); if(!b.hidden)shown++;
   });
   document.querySelectorAll(".cat").forEach(c=>{const v=c.querySelectorAll(".card:not([hidden])").length, all=c.querySelectorAll(".card").length;
-    c.hidden=!v; c.querySelector(".cnt").textContent=v===all?`${all} textures`:`${v} of ${all} textures`});
+    c.hidden=!v; c.querySelector(".cnt").textContent=v===all?`${all} ${all===1?"texture":"textures"}`:`${v} of ${all} textures`});
   document.querySelectorAll("#szf .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===filt.size));
   const nh=$("#noHit"); nh.hidden=shown>0;
   nh.textContent=`No skin matches "${filt.q.trim()}"${filt.size?" in "+SIZES[filt.size].name+" size":""}. Codes on this page run from 1001 to 2039.`;
